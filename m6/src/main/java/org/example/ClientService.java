@@ -12,22 +12,23 @@ public class ClientService {
     private PreparedStatement updateSt;
     private PreparedStatement deleteSt;
     private PreparedStatement printSt;
+    private Statement updateIdSt;
 
     public ClientService(Connection connection) throws SQLException {
         createSt = connection
-                .prepareStatement("INSERT INTO clients (name) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+                .prepareStatement("INSERT INTO client (name) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
 
         readSt = connection
-                .prepareStatement("SELECT id, name FROM clients WHERE id = ?");
+                .prepareStatement("SELECT id, name FROM client WHERE id = ?");
 
         updateSt = connection
-                .prepareStatement("UPDATE clients SET name = ? WHERE id = ?");
+                .prepareStatement("UPDATE client SET name = ? WHERE id = ?");
 
         deleteSt = connection
-                .prepareStatement("DELETE FROM clients WHERE id = ?");
+                .prepareStatement("DELETE FROM client WHERE id = ?");
 
         printSt = connection
-                .prepareStatement("SELECT id, name FROM clients");
+                .prepareStatement("SELECT id, name FROM client");
     }
 
     public long create(String name) throws SQLException {
@@ -35,7 +36,6 @@ public class ClientService {
         if (name.length() < 3 || name.length() > 30) {
             throw new IllegalArgumentException("Некоректна довжина імені клієнта");
         }
-
         long clientId = 0;
         createSt.setString(1, name);
         int createRes = createSt.executeUpdate();
@@ -82,13 +82,13 @@ public class ClientService {
     void deleteById(long id) throws SQLException{
         deleteSt.setLong(1, id);
         int deleteRes = deleteSt.executeUpdate();
-
         if (deleteRes > 0) {
             System.out.println("Клієнт був успішно видалений.");
         } else {
             System.out.println("Не вдалося знайти клієнта для видалення.");
         }
     }
+
     List<Client> listAll() throws SQLException {
         List<Client> clients = new ArrayList<>();
         ResultSet resultSet = printSt.executeQuery();

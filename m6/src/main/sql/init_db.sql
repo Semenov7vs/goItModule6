@@ -19,7 +19,7 @@ CREATE TABLE project (
                          START_DATE DATE NOT NULL,
                          FINISH_DATE DATE NOT NULL,
                          PRIMARY KEY (ID),
-                         FOREIGN KEY (CLIENT_ID) REFERENCES client(ID)
+                         FOREIGN KEY (CLIENT_ID) REFERENCES client(ID) ON DELETE CASCADE
 );
 
 CREATE TABLE project_worker (
